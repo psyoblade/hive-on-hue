@@ -61,7 +61,9 @@ select id, name from bar;
 
 ## 3. 도커 컴포즈를 통한 컨테이너 실행
 * 환경변수를 지정하여 bind volume 의 경우에도 전체경로를 docker-compose.yml 파일에 포함하지 않아도 됩니다 (-d, --detach 옵션도 사용 가능합니다)
-* 프로젝트 현재 경로를 지정하고 도커 컴포즈를 통해 컨테이너를 실행합니다
+* 도커 컴포즈의 경우 현재 경로의 이름을 그대로 컨벤셔을 따라가기 때문에 반드시 hue 라는 이름으로 checkout 받아야 한다
 ```bash
+git clone https://github.com/psyoblade/hive-on-hue.git hue
+cd hue
 export PROJECT_HOME=`pwd` ; docker-compose up
 ```
