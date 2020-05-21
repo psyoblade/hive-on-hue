@@ -1,0 +1,39 @@
+version: '3.3'
+
+services:
+    mysql:
+        image: mysql:5.7
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: hue
+            MYSQL_USER: hue
+            MYSQL_PASSWORD: hue
+        expose:
+            - '3306'
+        ports:
+            - '3306:3306'
+        volumes:
+            - mysql_data:/var/lib/mysql
+    hive:
+        image: dvoros/hive
+        depends_on:
+            - mysql
+        tty: true
+        volumes:
+            - $PROJECT_HOME/hive/data:/tmp/data
+    hue:
+        image: gethue/hue
+        depends_on:
+            - mysql
+            - hive
+        expose:
+            - '8888'
+        ports:
+            - '8888:8888'
+        volumes:
+            - $PROJECT_HOME/hue/conf/hue.ini:/usr/share/hue/desktop/conf/z-hue.ini:ro
+            - $PROJECT_HOME/hive/conf:/etc/hive/conf:ro
+
+volumes:
+    mysql_data: {}
