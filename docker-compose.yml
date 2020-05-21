@@ -17,8 +17,8 @@ services:
             - mysql_data:/var/lib/mysql
     hive:
         image: dvoros/hive
-        depends_on:
-            - mysql
+        ports:
+            - '10000:10000'
         tty: true
         volumes:
             - $PROJECT_HOME/hive/data:/tmp/data
