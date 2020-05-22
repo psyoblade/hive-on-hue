@@ -24,9 +24,6 @@ services:
             - $PROJECT_HOME/hive/data:/tmp/data
     hue:
         image: gethue/hue
-        depends_on:
-            - mysql
-            - hive
         expose:
             - '8888'
         ports:
@@ -34,6 +31,14 @@ services:
         volumes:
             - $PROJECT_HOME/hue/conf/hue.ini:/usr/share/hue/desktop/conf/z-hue.ini:ro
             - $PROJECT_HOME/hive/conf:/etc/hive/conf:ro
+        depends_on:
+            - mysql
+            - hive
+        command: >
+            /bin/bash -c "
+                sleep 30;
+                ./startup.sh;
+            "
 
 volumes:
     mysql_data: {}
