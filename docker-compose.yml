@@ -9,23 +9,25 @@ services:
             MYSQL_DATABASE: hue
             MYSQL_USER: hue
             MYSQL_PASSWORD: hue
-        expose:
-            - '3306'
         ports:
             - '3306:3306'
         volumes:
-            - mysql_data:/var/lib/mysql
+            - $PROJECT_HOME/mysql/data:/var/lib/mysql
+            - $PROJECT_HOME/mysql/custom:/etc/mysql/conf.d
     hive:
-        image: dvoros/hive
+        image: psyoblade/hive
         ports:
+            - '8088:8088'
+            - '9083:9083'
             - '10000:10000'
+            - '50070:50070'
         tty: true
+        environment:
+            - LANG=ko_KR.UTF8
         volumes:
             - $PROJECT_HOME/hive/data:/tmp/data
     hue:
         image: gethue/hue
-        expose:
-            - '8888'
         ports:
             - '8888:8888'
         volumes:
@@ -36,9 +38,6 @@ services:
             - hive
         command: >
             /bin/bash -c "
-                sleep 30;
+                sleep 10;
                 ./startup.sh;
             "
-
-volumes:
-    mysql_data: {}

@@ -72,3 +72,20 @@ export PROJECT_HOME=`pwd` ; docker-compose up
 ## 4. 도커 컴포즈 실행 대기 스크립트 적용
 > 실행 시에 depends\_on 명령만으로 대상 컨테이너가 Ready 상태임을 알 수는 없기 때문에 별도의 스크립트 작업이 필요하다. 단, wait-for-it.sh 스크립트는 리눅스 환경에서만 제대로 동작한다 (-\_-;) 이 또한 해당 이미지에 포함되어야 하므로 매번 넣기는 귀찮기 때문에 나이브하게 30~60초 정도 대기 후에 실행하도록 작성되었다
 
+
+## 5. MySQL 한글 입력 오류
+> 도커로 MySQL 서버를 올리는 경우 캐릭터셋 설정이 기본이 latin 으로 되어 한글이 제대로 저장되지 않으므로 /etc/mysql/conf.d 경로를 별도의 볼륨으로 지정하고 하래와 같이 my.cnf 파일을 생성하여 연결합니다. 그리고 데이터베이스 생성 시에 캐릭터셋과 콜레이션이 결정되기 때문에 생성 초기에 설정해 두는 것이 좋습니다
+```properties
+[client]
+default-character-set=utf8
+
+[mysqld]
+character-set-client-handshake=FALSE
+init_connect="SET collation_connection = utf8_general_ci"
+init_connect="SET NAMES utf8"
+character-set-server=utf8
+collation-server=utf8_general_ci
+
+[mysql]
+default-character-set=utf8
+```
